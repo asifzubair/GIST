@@ -29,6 +29,7 @@ load10xTP <- function(tp_file) {
   return(tp)
 }
 
+
 #' Impute, filter and normalize
 #' Given a matrix of SC/ST counts, this will
 #' impute gene counts using knn_smoothing
@@ -199,6 +200,18 @@ make_signature_matrix <- function(sc_counts, sc_labels, compute_std = F, save_pr
 }
 
 
+#' merge dataframe with locations
+#' internal function for plotting data
+#' tp should be a dataframe with pxl_col, pxl_row
+merge_with_locations <- function(.data, tp){
+  .data <- .data %>%
+    merge(tp[c('pxl_col', 'pxl_row')], by = 0) %>%
+    tibble::column_to_rownames("Row.names") %>%
+    tidyr::gather("type", "marker", -pxl_col, -pxl_row)
+  return(.data)
+}
+
+
 #' visualization of spots expression
 #' across tissue for a single variable
 #' @param df spot by value matrix, spots are rows, values are cols
@@ -267,3 +280,4 @@ plot.spots <- function(df, tp, trans = 'identity',
   }
   return(p)
 }
+
