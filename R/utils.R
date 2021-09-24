@@ -219,7 +219,8 @@ merge_with_locations <- function(.data, tp){
 #'           pxl_col, pxl_row indication column and row location of pixel
 #' @param trans any transofrmation that needs to be done to values - log10 etc.
 #' @param legend.label label for the value legend
-plot.spots0 <- function(df, tp, trans = 'identity', legend.label = 'marker exp.', size_m = 4){
+#' @param size_m
+plot.spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size_m = 4){
   p <- df %>%
     merge_with_locations(tp) %>%
     ggplot(aes(pxl_row, -pxl_col, color = marker)) +
@@ -231,22 +232,24 @@ plot.spots0 <- function(df, tp, trans = 'identity', legend.label = 'marker exp.'
       strip.text = element_text(size = 14),
       axis.text = element_blank(),
       axis.title = element_blank(),
+      axis.ticks = element_blank(),
       panel.background = element_rect(fill = "black")) +
     labs(colour = legend.label)
   return(p)
 }
 
 
-#' visualization of spots expression
-#' across tissue
+#' Visualization of spots with proportions of cell types
 #' @param df spot by value matrix, spots are rows, values are cols
 #' @param tp matrix of spot locations, should contain
-#'           pxl_col, pxl_row indication column and row location of pixel
+#'           \code{pxl_col}, \code{pxl_row} indication column and row location of pixel
 #' @param trans any transofrmation that needs to be done to values - log10 etc.
 #' @param legend.label label for the value legend
 #' @param joint_scale plot common scale for all spatial distributions
-plot.spots <- function(df, tp, trans = 'identity',
-                       legend.label = 'marker exp.', ncols = 3, joint_scale = FALSE, my_theme = NULL, size_m = 1){
+#' @param size_m
+#' @param my_theme
+plot.spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols = 3,
+                       joint_scale = FALSE, size_m = 1, my_theme = NULL){
   default_theme <- theme(
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
