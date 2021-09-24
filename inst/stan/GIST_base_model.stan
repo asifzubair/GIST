@@ -1,31 +1,56 @@
 //
-// This Stan program defines a simple model, with a
-// vector of values 'y' modeled as normally distributed
-// with mean 'mu' and standard deviation 'sigma'.
-//
 // Learn more about model development with Stan at:
 //
 //    http://mc-stan.org/users/interfaces/rstan.html
 //    https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started
 //
 
-// The input data is a vector 'y' of length 'N'.
-data {
-  int<lower=0> N;
-  vector[N] y;
+// The input data
+data
+{
+  int<lower=0> numGenes; // The number of "genes" (1000)
+  int<lower=0> numCellTypes; // number of cell types (2)
+  vector[numGenes] exprMixVec; // the data
+
+  // the matrix of signature (numGenes, numCellTypes)
+  matrix[numGenes, numCellTypes] sigMat;
 }
 
-// The parameters accepted by the model. Our model
-// accepts two parameters 'mu' and 'sigma'.
-parameters {
-  real mu;
+transformed data
+{
+  vector<lower=0>[numCellTypes] alpha;
+  for (i in 1:numCellTypes)
+  {
+    // This is an uniform prior over the dirichlet (beta distribution if numCellTypes = 2).
+    // Vector of 1s is uniform in the case of  dirichlet distrubution.
+    alpha[i] = 1;
+  }
+}
+
+// The parameters accepted by the model.
+parameters
+{
+  // Syntax is "simplex[dimensions_of_simplexes] vectorOfSimplexesName[length_of_vector]".
+  simplex[numCellTypes] estimatedProportionsVecSimp;
+
+  real<lower=1> nu;
+
+  // Variance parameters, estimated below.
   real<lower=0> sigma;
+  real beta0;
 }
 
-// The model to be estimated. We model the output
-// 'y' to be normally distributed with mean 'mu'
-// and standard deviation 'sigma'.
-model {
-  y ~ normal(mu, sigma);
-}
+// The model to be estimated.
+model
+{
+  // alpha is a vector 1's, meaning this dirichlet represents a uniform prior.
+  estimatedProportionsVecSimp ~ dirichlet(alpha);
 
+  // Note that the gamma distribution is in terms of shape and rate
+  // i.e. y ~ gamma(alpha, beta)
+  // this means that for our case: E(nu) = 2/0.01 = 200 !
+  nu ~ gamma(2, 0.1);
+
+  exprMixVec ~ student_t(nu, beta0 + sigMat * estimatedProportionsVecSimp, sigma);
+
+}
