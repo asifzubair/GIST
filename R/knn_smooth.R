@@ -10,8 +10,8 @@
 # https://github.com/yanailab/knn-smoothing/blob/master/knn_smooth.R
 # Latest commit b8e450d on Apr 12, 2018
 
-suppressPackageStartupMessages(library(Matrix))
-suppressPackageStartupMessages(library(rsvd))
+#suppressPackageStartupMessages(library(Matrix))
+#suppressPackageStartupMessages(library(rsvd))
 
 randomized_pca <- function(tmat, d, seed){
   # @param tmat A non-negative matrix with samples by features
@@ -19,7 +19,7 @@ randomized_pca <- function(tmat, d, seed){
   set.seed(seed)
   #rsvd_obj <- rsvd(scale(tmat, center = TRUE, scale = FALSE), k=d)
   #rsvd_obj$u %*% diag(rsvd_obj$d)
-  rpca_obj <- rpca(tmat, k=d, center=T, scale=F, retx=T, p=10, q=7)
+  rpca_obj <- rsvd::rpca(tmat, k=d, center=T, scale=F, retx=T, p=10, q=7)
   rpca_obj$x
 }
 
@@ -59,26 +59,25 @@ smoother_aggregate_nearest_nb <- function(mat, D, k){
   })
 }
 
+#' KNN-smoothing on UMI-filtered single-cell RNA-seq data
+#'
+#' @param mat A numeric matrix with gene names on rows and cell names on columns.
+#' @param k Number of nearest neighbours to aggregate.
+#' @param d Number of Principal components.
+#' @param seed Seed number. (default=42)
+#' @return A smoothed numeric matrix.
+#' @examples
+#' X <- matrix(abs(sin(seq(from=1, to=1000, length.out = 1000))),
+#' nrow = 25, byrow = T)
+#' y <- rep(1:4, each=10)
+#' dim(X)
+#' colnames(X) <- as.character(paste0("s", seq_len(ncol(X))))
+#' rownames(X) <- as.character(paste0("g", seq_len(nrow(X))))
+#' S <- knn_smoother(X, k=5)
+#' plot(X[1, ], X[3, ], col=factor(y), main="original")
+#' plot(S[1, ], S[3, ], col=factor(y), main="smoothed")
+#' @export
 knn_smoothing <- function(mat, k, d=10, seed=42){
-  #' KNN-smoothing on UMI-filtered single-cell RNA-seq data
-  #'
-  #' @param mat A numeric matrix with gene names on rows and cell names on columns.
-  #' @param k Number of nearest neighbours to aggregate.
-  #' @param d Number of Principal components.
-  #' @param seed Seed number. (default=42)
-  #' @return A smoothed numeric matrix.
-  #' @examples
-  #' X <- matrix(abs(sin(seq(from=1, to=1000, length.out = 1000))),
-  #' nrow = 25, byrow = T)
-  #' y <- rep(1:4, each=10)
-  #' dim(X)
-  #' colnames(X) <- as.character(paste0("s", seq_len(ncol(X))))
-  #' rownames(X) <- as.character(paste0("g", seq_len(nrow(X))))
-  #' S <- knn_smoother(X, k=5)
-  #' plot(X[1, ], X[3, ], col=factor(y), main="original")
-  #' plot(S[1, ], S[3, ], col=factor(y), main="smoothed")
-  #' @export
-
   cname <- colnames(mat)
   gname <- rownames(mat)
 
