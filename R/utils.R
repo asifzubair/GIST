@@ -221,7 +221,7 @@ merge_with_locations <- function(.data, tp){
 #' @param size_m size of the spots to be plotted (default: 4)
 #' @return plot showing spots according to tissue positions
 #' @export
-plot.spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size_m = 4){
+plot_spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size_m = 4){
   p <- df %>%
     merge_with_locations(tp) %>%
     ggplot2::ggplot(aes(pxl_row, -pxl_col, color = marker)) +
@@ -251,7 +251,7 @@ plot.spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size
 #' @param my_theme gg_theme to be passed to ggplot
 #' @return a visualization of supplied metrics according to tissues positions
 #' @export
-plot.spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols = 3,
+plot_spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols = 3,
                        joint_scale = FALSE, size_m = 1, my_theme = NULL){
   default_theme <- ggplot2::theme(
     panel.grid.major = element_blank(),

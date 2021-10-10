@@ -1,10 +1,10 @@
-#' Guided Imae Spatial Transcriptomics
+#' Guided Image Spatial Transcriptomics
 #'
-#' #' @param st_expression spatial transcriptomics expression matrix (genes by spot)
-#' @param sig_mat signature matrix (genes by celltype)
-#' @param prior_values
+#' @param st_expression spatial transcriptomics expression matrix (genes by spot)
+#' @param sig_mat signature matrix (genes by cell type)
+#' @param prior_values vector of prior values
 #' @param prior_index index in signature matrix of cell type which needs a prior on it
-#' @param prior_lambda
+#' @param prior_lambda tunable hyperparameter \eqn{\lambda} for the prior beta distribution
 #' @param ... arguments to be passed to \code{rstan::sampling} (e.g. \code{chains, iter, init, verbose, refresh})
 #' @return An object of type dataframe with posterior mean estimates
 #' @export
