@@ -15,17 +15,19 @@ GIST(
 )
 }
 \arguments{
-\item{st_expression}{spatial transcriptomics expression matrix (genes by spot)}
+\item{st_expression}{Spatial transcriptomics expression matrix (genes by spot)}
 
-\item{sig_mat}{signature matrix (genes by cell type)}
+\item{sig_mat}{Signature matrix (genes by cell type)}
 
-\item{prior_values}{vector of prior values}
+\item{prior_values}{Vector of prior values}
 
-\item{prior_index}{index in signature matrix of cell type which needs a prior on it}
+\item{prior_index}{Index in signature matrix of cell type which needs a prior on it}
 
-\item{prior_lambda}{tunable hyperparameter \eqn{\lambda} for the prior beta distribution}
+\item{prior_lambda}{Tunable hyperparameter \eqn{\lambda} for the prior beta distribution}
 
-\item{...}{arguments to be passed to \code{rstan::sampling} (e.g. \code{chains, iter, init, verbose, refresh})}
+\item{num_cores}{How many cores to use for parallel processing}
+
+\item{...}{Arguments to be passed to \code{rstan::sampling} (e.g. \code{chains, iter, init, verbose, refresh})}
 }
 \value{
 An object of type dataframe with posterior mean estimates

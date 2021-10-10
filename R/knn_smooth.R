@@ -61,6 +61,8 @@ smoother_aggregate_nearest_nb <- function(mat, D, k){
 
 #' KNN-smoothing on UMI-filtered single-cell RNA-seq data
 #'
+#' source: https://github.com/yanailab/knn-smoothing/blob/master/knn_smooth.R
+#'
 #' @param mat A numeric matrix with gene names on rows and cell names on columns.
 #' @param k Number of nearest neighbours to aggregate.
 #' @param d Number of Principal components.
@@ -68,12 +70,12 @@ smoother_aggregate_nearest_nb <- function(mat, D, k){
 #' @return A smoothed numeric matrix.
 #' @examples
 #' X <- matrix(abs(sin(seq(from=1, to=1000, length.out = 1000))),
-#' nrow = 25, byrow = T)
+#' nrow = 25, byrow = TRUE)
 #' y <- rep(1:4, each=10)
 #' dim(X)
 #' colnames(X) <- as.character(paste0("s", seq_len(ncol(X))))
 #' rownames(X) <- as.character(paste0("g", seq_len(nrow(X))))
-#' S <- knn_smoother(X, k=5)
+#' S <- knn_smoothing(X, k=5)
 #' plot(X[1, ], X[3, ], col=factor(y), main="original")
 #' plot(S[1, ], S[3, ], col=factor(y), main="smoothed")
 #' @export

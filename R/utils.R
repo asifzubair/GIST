@@ -182,14 +182,14 @@ make_signature_matrix <- function(sc_counts, sc_labels, save_fname = NULL){
     t %>% as.data.frame %>%
     tibble::rownames_to_column('cell') %>%
     dplyr::inner_join(sc_labels, by = 'cell') %>%
-    dplyr::select(bio_celltype, everything()) %>%
+    dplyr::select(bio_celltype, dplyr::everything()) %>%
     dplyr::select(-cell) %>%
     dplyr::group_by(bio_celltype) %>%
     dplyr::summarise_all(mean) %>%
     tibble::column_to_rownames('bio_celltype') %>%
     t %>% as.data.frame()
 
-  if(!is.null(save_file))
+  if(!is.null(save_fname))
     saveRDS(sig_mat, file = save_fname)
 
   invisible(sig_mat)
@@ -228,13 +228,13 @@ plot_spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size
     ggplot2::geom_point(size = size_m) +
     ggplot2::scale_colour_gradient(low="#f8d39f", high = "#800000", trans = trans) +
     ggplot2::theme(
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      strip.text = element_text(size = 14),
-      axis.text = element_blank(),
-      axis.title = element_blank(),
-      axis.ticks = element_blank(),
-      panel.background = element_rect(fill = "black")) +
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.text = ggplot2::element_text(size = 14),
+      axis.text = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.background = ggplot2::element_rect(fill = "black")) +
     ggplot2::labs(colour = legend.label)
   return(p)
 }
@@ -246,6 +246,7 @@ plot_spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size
 #'           \code{pxl_col}, \code{pxl_row} indication column and row location of pixel
 #' @param trans Any transformation that needs to be done to values - log10 etc.
 #' @param legend.label Label for the value legend (default: "Prop.")
+#' @param ncols number of columns
 #' @param joint_scale Plot common legend scale (default: FALSE)
 #' @param size_m Size of the spots to be plotted (default: 1)
 #' @param my_theme gg_theme to be passed to ggplot
@@ -254,20 +255,20 @@ plot_spots0 <- function(df, tp, trans = 'identity', legend.label = 'Prop.', size
 plot_spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols = 3,
                        joint_scale = FALSE, size_m = 1, my_theme = NULL){
   default_theme <- ggplot2::theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    axis.ticks = element_blank(),
-    panel.background = element_rect(fill = "black"))
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    axis.text = ggplot2::element_blank(),
+    axis.title = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_rect(fill = "black"))
   if (is.null(my_theme)) my_theme = default_theme
   df <- df %>%
     merge_with_locations(tp)
   if (!joint_scale){
     p <-  df %>%
-      group_split(type) %>%
+      dplyr::group_split(type) %>%
       purrr::map(
-        ~ggplot2::ggplot(., aes(pxl_row, -pxl_col, color = marker)) +
+        ~ggplot2::ggplot(., ggplot2::aes(pxl_row, -pxl_col, color = marker)) +
           ggplot2::geom_point(size = size_m, shape=16) +
           ggplot2::scale_colour_gradient(low="#f8d39f", high = "#800000", trans = trans) +
           ggplot2::facet_wrap(~ type, labeller = function(x) label_value(x, multi_line = FALSE)) +
@@ -277,7 +278,7 @@ plot_spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols
       cowplot::plot_grid(plotlist = ., align = 'hv', ncol = ncols)
   } else {
     p <- df %>%
-      ggplot2::ggplot(aes(pxl_row, -pxl_col, color = marker)) +
+      ggplot2::ggplot(ggplot2::aes(pxl_row, -pxl_col, color = marker)) +
       ggplot2::geom_point(size = size_m, shape=16) +
       ggplot2::scale_colour_gradient(low="#f8d39f", high = "#800000", trans = trans) +
       ggplot2::facet_wrap(~ type, labeller = function(x) label_value(x, multi_line = FALSE), ncol = ncols) +

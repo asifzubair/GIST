@@ -1,11 +1,12 @@
-#' Guided Image Spatial Transcriptomics
+#' Guiding-Image Spatial Transcriptomics
 #'
-#' @param st_expression spatial transcriptomics expression matrix (genes by spot)
-#' @param sig_mat signature matrix (genes by cell type)
-#' @param prior_values vector of prior values
-#' @param prior_index index in signature matrix of cell type which needs a prior on it
-#' @param prior_lambda tunable hyperparameter \eqn{\lambda} for the prior beta distribution
-#' @param ... arguments to be passed to \code{rstan::sampling} (e.g. \code{chains, iter, init, verbose, refresh})
+#' @param st_expression Spatial transcriptomics expression matrix (genes by spot)
+#' @param sig_mat Signature matrix (genes by cell type)
+#' @param prior_values Vector of prior values
+#' @param prior_index Index in signature matrix of cell type which needs a prior on it
+#' @param prior_lambda Tunable hyperparameter \eqn{\lambda} for the prior beta distribution
+#' @param num_cores How many cores to use for parallel processing
+#' @param ... Arguments to be passed to \code{rstan::sampling} (e.g. \code{chains, iter, init, verbose, refresh})
 #' @return An object of type dataframe with posterior mean estimates
 #' @export
 GIST <- function(st_expression, sig_mat, prior_values = NULL, prior_index = NULL,  prior_lambda = 50, num_cores = 1, ...){
@@ -50,13 +51,13 @@ GIST <- function(st_expression, sig_mat, prior_values = NULL, prior_index = NULL
                          prior_phi = prior_values[i], prior_index = prior_index, prior_lambda = prior_lambda)
 
       nmfOut <- do.call(sampling, c(list(object = model, data = standata), args0))
-      stanSumNmf <- extract(nmfOut)$estimatedProportionsVecSimp[, 1:numCellTypes]
+      stanSumNmf <- rstan::extract(nmfOut)$estimatedProportionsVecSimp[, 1:numCellTypes]
       pEstimatesList <- colMeans(stanSumNmf)
 
       return(pEstimatesList)
     }
 
-  parallel::stopCluster(cl)
+  if (num_cores > 1) parallel::stopCluster(cl)
 
   colnames(parout) <- colnames(sig_mat)
   rownames(parout) <- colnames(st_expression)

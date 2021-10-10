@@ -25,6 +25,8 @@ plot_spots(
 
 \item{legend.label}{Label for the value legend (default: "Prop.")}
 
+\item{ncols}{number of columns}
+
 \item{joint_scale}{Plot common legend scale (default: FALSE)}
 
 \item{size_m}{Size of the spots to be plotted (default: 1)}
