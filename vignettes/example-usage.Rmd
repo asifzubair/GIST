@@ -1,0 +1,39 @@
+---
+title: "Example usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(GIST)
+```
+
+
+## Load the data
+
+
+## Impute/Normalize ST data
+
+
+## Normalize SC data
+
+
+## Make the signature matrix
+
+
+## Run GIST
+
+
+## Visualize results
+
+

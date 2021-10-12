@@ -2,7 +2,7 @@
 % Please edit documentation in R/GIST.R
 \name{GIST}
 \alias{GIST}
-\title{Guided Image Spatial Transcriptomics}
+\title{Guiding-Image Spatial Transcriptomics}
 \usage{
 GIST(
   st_expression,
@@ -33,5 +33,5 @@ GIST(
 An object of type dataframe with posterior mean estimates
 }
 \description{
-Guided Image Spatial Transcriptomics
+Guiding-Image Spatial Transcriptomics
 }
