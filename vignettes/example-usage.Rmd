@@ -3,8 +3,10 @@ title: "Example usage"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example usage}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -18,22 +20,52 @@ knitr::opts_chunk$set(
 library(GIST)
 ```
 
+## Download the data
 
-## Load the data
+You can get some test data from [here]().
 
+Create a folder called `test_data` and download the compressed data there. Unzip the compressed file. You should see the following folders:
 
-## Impute/Normalize ST data
+```{r}
+test_data = "~/Downloads/test_data"
+list.files(test_data)
+```
 
+## Load and preprocess the ST data
 
-## Normalize SC data
+Let's load the spatial transcriptomics (ST) data. 
 
+```{r}
+st_counts = load10xMatrix(file.path(test_data, "filtered_feature_bc_matrix"))
+st_counts = preprocess_expr_mat(st_counts, impute = TRUE, k = 5, d = 10, normalize = 'sct')
+```
+
+## Load and precprocess the SC data
+
+```{r}
+sc_counts = read.table(file.path(test_data, "mouse-subsampled-scdata", "counts.tsv"), header = TRUE, row.names = 1)
+sc_counts = preprocess_expr_mat(sc_counts, impute = FALSE, normalize = 'sct')
+```
 
 ## Make the signature matrix
 
+```{r}
+sc_labels = read.table(file.path(test_data, "mouse-subsampled-scdata", "cell_labels.tsv"), header = TRUE)
+```
+
+```{r}
+sig_mat = make_signature_matrix(sc_counts, sc_labels)
+```
 
 ## Run GIST
 
+```{r}
+st_props = GIST(st_counts, sig_mat, num_cores = parallel::detectCores())
+```
 
 ## Visualize results
 
-
+```{r}
+tp = load10xTP(file.path(test_data, "spatial", "tissue_positions_list.csv"))
+plot_spots(st_props, tp, ncols = 3)
+```
