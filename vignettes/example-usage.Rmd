@@ -1,5 +1,6 @@
 ---
 title: "Example usage"
+data: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example usage}
@@ -12,7 +13,8 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE
 )
 ```
 
@@ -42,25 +44,26 @@ st_counts = preprocess_expr_mat(st_counts, impute = TRUE, k = 5, d = 10, normali
 
 ## Load and precprocess the SC data
 
+Let's load and normalize the SC data. Please note that for this dataset we need to pass `check.names` as `FALSE` to `read.table`, otherwise `R` will unhelpfully change the column names.
+
 ```{r}
-sc_counts = read.table(file.path(test_data, "mouse-subsampled-scdata", "counts.tsv"), header = TRUE, row.names = 1)
+sc_counts = read.table(file.path(test_data, "mouse-subsampled-scdata", "counts.tsv"), header = TRUE, row.names = 1, check.names = FALSE)
 sc_counts = preprocess_expr_mat(sc_counts, impute = FALSE, normalize = 'sct')
 ```
 
 ## Make the signature matrix
 
-```{r}
-sc_labels = read.table(file.path(test_data, "mouse-subsampled-scdata", "cell_labels.tsv"), header = TRUE)
-```
+We will now load the the labels for the cell types and construct the signature matrix.
 
 ```{r}
+sc_labels = read.table(file.path(test_data, "mouse-subsampled-scdata", "cell_labels.tsv"), header = TRUE)
 sig_mat = make_signature_matrix(sc_counts, sc_labels)
 ```
 
 ## Run GIST
 
 ```{r}
-st_props = GIST(st_counts, sig_mat, num_cores = parallel::detectCores())
+st_props = GIST(st_counts, sig_mat, num_cores = 1)
 ```
 
 ## Visualize results

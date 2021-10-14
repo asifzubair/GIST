@@ -8,8 +8,8 @@
 // The input data
 data
 {
-  int<lower=0> numGenes; // The number of "genes" (1000)
-  int<lower=0> numCellTypes; // number of cell types (2)
+  int<lower=0> numGenes; // The number of "genes"
+  int<lower=0> numCellTypes; // number of cell types
   vector[numGenes] exprMixVec; // the data
 
   // the matrix of signature (numGenes, numCellTypes)
