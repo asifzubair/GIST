@@ -271,7 +271,7 @@ plot_spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols
         ~ggplot2::ggplot(., ggplot2::aes(pxl_row, -pxl_col, color = marker)) +
           ggplot2::geom_point(size = size_m, shape=16) +
           ggplot2::scale_colour_gradient(low="#f8d39f", high = "#800000", trans = trans) +
-          ggplot2::facet_wrap(~ type, labeller = function(x) label_value(x, multi_line = FALSE)) +
+          ggplot2::facet_wrap(~ type, labeller = function(x) ggplot2::label_value(x, multi_line = FALSE)) +
           ggplot2::labs(colour = legend.label) +
           my_theme
       ) %>%
@@ -281,7 +281,7 @@ plot_spots <- function(df, tp, trans = 'identity', legend.label = 'Prop.', ncols
       ggplot2::ggplot(ggplot2::aes(pxl_row, -pxl_col, color = marker)) +
       ggplot2::geom_point(size = size_m, shape=16) +
       ggplot2::scale_colour_gradient(low="#f8d39f", high = "#800000", trans = trans) +
-      ggplot2::facet_wrap(~ type, labeller = function(x) label_value(x, multi_line = FALSE), ncol = ncols) +
+      ggplot2::facet_wrap(~ type, labeller = function(x) ggplot2::label_value(x, multi_line = FALSE), ncol = ncols) +
       my_theme +
       ggplot2::labs(colour = legend.label)
   }

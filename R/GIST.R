@@ -57,7 +57,6 @@ GIST <- function(st_expression, sig_mat, prior_values = NULL, prior_index = NULL
         standata <- list(numGenes = numGenes, numCellTypes = numCellTypes,
                          exprMixVec = st_expression[, i], sigMat = sig_mat,
                          prior_phi = prior_values[i], prior_index = prior_index, prior_lambda = prior_lambda)
-      print(model)
       nmfOut <- do.call(sampling, c(list(object = model, data = standata), args0))
       stanSumNmf <- rstan::extract(nmfOut)$estimatedProportionsVecSimp[, 1:numCellTypes]
       pEstimatesList <- colMeans(stanSumNmf)
