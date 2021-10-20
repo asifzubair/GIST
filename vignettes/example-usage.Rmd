@@ -62,10 +62,10 @@ sig_mat = make_signature_matrix(sc_counts, sc_labels)
 
 ## Run GIST
 
-Let's pass the normalized spatial transcriptomics counts matrix and the signature matrix to `GIST` for deconvolution.
+Let's pass the normalized spatial transcriptomics counts matrix and the signature matrix to `GIST` for deconvolution. We slice the spatial data to include `20` spots for illustration. 
 
 ```{r}
-st_props = GIST(st_counts[,1:2], sig_mat, num_cores = parallel::detectCores(), verbose = FALSE, refresh = 0)
+st_props = GIST(st_counts[,1:20], sig_mat, num_cores = parallel::detectCores(), verbose = FALSE, refresh = 0)
 ```
 
 ## Visualize results
